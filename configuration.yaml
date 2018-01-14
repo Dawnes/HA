@@ -1,0 +1,154 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 52.492
+  longitude: 4.685
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 3
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Amsterdam
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  # api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+#discovery:
+#    ignore: 
+#    - samsung_tv
+#    - google_cast
+#    - philips_hue
+
+hassio:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+#conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+#map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+#sensor:
+#  - platform: yr
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+panel_iframe:
+  configurator:
+    title: Configurator
+    icon: mdi:wrench
+    url: http://hassio.local:3218
+
+
+# MQTT broker    
+#mqtt:
+#  broker: core-mosquitto
+#  username: ha
+#  password: hapw
+  
+# Samsung TV
+
+#media_player:
+#  - platform: samsungtv
+#    host: 192.168.5.74
+#    port: 8001
+
+mqtt:
+  broker: localhost
+  port: 1883
+  client_id: hassio
+  keepalive: 120
+#  discovery: true
+#  discovery_prefix: smartthings
+
+binary_sensor:
+  -  platform: mqtt
+     name: "Storageroom Switch"
+     state_topic: "smartthings/Storageroom/switch/state"
+     payload_on: "on"     #This is case sensitive!
+     payload_off: "off"    #This is case sensitive!
+     device_class: opening  #Your sensor will read as open/closed instead of on/off with this setting
+     retain: true     #this is important so HA doesn't report the sensor as disconnected
+     
+sensor:
+  -  platform: mqtt
+     name: "Temperature Hall"
+     state_topic: "smartthings/Sensor Hall Meteo/temperature/state"
+     unit_of_measurement: '°C'
+  -  platform: mqtt
+     name: "Temperature Livingroom"
+     state_topic: "smartthings/Sensor Livingroom/temperature/state"
+     unit_of_measurement: '°C'
+  -  platform: mqtt
+     name: "Livingroom Motion"
+     state_topic: "smartthings/Sensor Livingroom/motion/state"
+     payload_on: "on"     #This is case sensitive!
+     payload_off: "off"    #This is case sensitive!
+    
+switch:
+  -  platform: mqtt
+     name: "IKEA"
+     state_topic: "smartthings/Ikea/switch/state"
+     command_topic: "smartthings/Ikea/switch/cmd"
+     payload_on: "on"     #This is case sensitive!
+     payload_off: "off"    #This is case sensitive!
+     retain: false     #this is important so HA doesn't report the sensor as disconnected
+  -  platform: mqtt
+     name: "Garden"
+     state_topic: "smartthings/Garden Lights/switch/state"
+     command_topic: "smartthings/Garden Lights/switch/cmd"
+     payload_on: "on"     #This is case sensitive!
+     payload_off: "off"    #This is case sensitive!
+     retain: true     #this is important so HA doesn't report the sensor as disconnected
+  -  platform: mqtt
+     name: "Hall"
+     state_topic: "smartthings/Hall/switch/state"
+     command_topic: "smartthings/Hall/switch/cmd"
+     payload_on: "on"     #This is case sensitive!
+     payload_off: "off"    #This is case sensitive!
+     retain: true     #this is important so HA doesn't report the sensor as disconnected
+
+  
